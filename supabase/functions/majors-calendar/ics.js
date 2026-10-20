@@ -3,6 +3,14 @@
 const COLORS = { tyo:"crimson", bos:"royalblue", lon:"slateblue", cpt:"lightseagreen", syd:"darkorange", ber:"goldenrod", chi:"deepskyblue", nyc:"darkorchid", sha:"mediumvioletred" };
 const enc = new TextEncoder();
 
+// Input validation: only well-formed rows and https links reach the feed.
+const ID_RE = /^[a-z]{3}$/, DATE_RE = /^\d{4}-\d{2}-\d{2}$/, KINDS = new Set(["window","result","pay"]);
+function safeUrl(u){
+  if (typeof u !== "string" || /[\s"'<>`\\]/.test(u)) return null;
+  try { const x = new URL(u); return x.protocol === "https:" && x.hostname ? x.href : null; } catch { return null; }
+}
+const safeDate = d => typeof d === "string" && DATE_RE.test(d) && !isNaN(new Date(d + "T00:00:00Z")) ? d : null;
+
 function esc(s){ return String(s ?? "").replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n"); }
 function fold(line){
   // RFC 5545: lines over 75 octets are folded with CRLF + space, never splitting a UTF-8 character
@@ -31,6 +39,11 @@ function vevent({uid, start, end, summary, desc, url, color, updated, alarmDays}
 }
 
 export function buildIcs(races, events, opts = {}){
+  races = (Array.isArray(races) ? races : []).filter(r => r && ID_RE.test(r.id) && safeDate(r.race_date))
+    .map(r => ({ ...r, race_end: safeDate(r.race_end), official_url: safeUrl(r.official_url) }));
+  events = (Array.isArray(events) ? events : []).filter(e => e && ID_RE.test(e.race_id) && KINDS.has(e.kind)
+      && safeDate(e.starts_on) && (e.ends_on == null || safeDate(e.ends_on)) && /^\d+$/.test(String(e.id)))
+    .map(e => ({ ...e, source_url: safeUrl(e.source_url) }));
   const pick = opts.races && opts.races.length ? new Set(opts.races) : null;
   const pageUrl = opts.pageUrl || "";
   const sel = races.filter(r => !pick || pick.has(r.id)).sort((a,b)=>a.sort-b.sort);

@@ -9,3 +9,4 @@
 - The `majors-calendar` edge function must stay deployed with JWT verification off (calendar apps can't send auth headers).
 - A weekly scheduled task ("Marathon Majors weekly refresh", Mondays) updates the tables from official race sites. Page and feed need no rebuild for data changes.
 - Race colours are CSS tokens `--mm-<id>` in `src/app.css`; badges are placeholder circles until `badge_url` is set (Miguel is hand-drawing them on a circle template, square transparent PNGs ~600px).
+- Treat every database value as untrusted (the weekly task writes data it found on the web). All rows go through `shape()` in `src/app.js` and the validation at the top of `buildIcs()` in the feed: 3-letter ids, ISO dates, known event kinds, https-only links. Database CHECK constraints enforce the same rules. Run `node scripts/test-security.mjs` after changing either.

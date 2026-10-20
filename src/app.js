@@ -19,15 +19,27 @@ const days=(a,b)=>Math.round((D(b)-D(a))/DAY);
 const pct=s=>(D(s)-startD)/(endD-startD);
 const clamp=x=>Math.max(0,Math.min(1,x));
 const status=ev=>{const end=ev.e||ev.s; if(D(end)<TODAY) return "closed"; if(D(ev.s)>TODAY) return "upcoming"; return "open";};
-const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// ---- Input validation: every value from the database passes through here before it can reach the page ----
+const ID_RE=/^[a-z]{3}$/, CODE_RE=/^[A-Z]{3}$/, DATE_RE=/^\d{4}-\d{2}-\d{2}$/, KINDS=new Set(["window","result","pay"]);
+const safeUrl=u=>{ if(typeof u!=="string"||/[\s"'<>`\\]/.test(u)) return null;
+  try{ const x=new URL(u); return x.protocol==="https:"&&x.hostname ? x.href : null; }catch(e){ return null; } };
+const safeDate=d=>typeof d==="string"&&DATE_RE.test(d)&&!isNaN(D(d)) ? d : null;
+const txt=(s,max)=>s==null?"":String(s).slice(0,max);
 const badge=(r,size=44)=>r.badge?`<span class="mm-badge img" style="--s:${size}px"><img src="${esc(r.badge)}" alt=""></span>`
   :`<span class="mm-badge" style="--c:var(--mm-${r.id});--s:${size}px" aria-hidden="true"><span>${esc(r.code)}</span></span>`;
 
 function shape(races,events,meta){
-  return {checked:(meta.find(m=>m.key==="checked_on")||{}).value,
-    races:races.sort((a,b)=>a.sort-b.sort).map(r=>({id:r.id,code:r.code,name:r.name,full:r.full_name,city:r.city,race:r.race_date,raceEnd:r.race_end,raceEst:r.race_tbc,
-      fee:r.fee,entry:r.entry_routes,url:r.official_url,note:r.note,badge:r.badge_url,
-      events:events.filter(e=>e.race_id===r.id).sort((a,b)=>a.starts_on<b.starts_on?-1:1).map(e=>({t:e.kind,k:e.label,s:e.starts_on,e:e.ends_on,est:e.estimated}))}))};
+  races=Array.isArray(races)?races:[]; events=Array.isArray(events)?events:[]; meta=Array.isArray(meta)?meta:[];
+  const evs=events.filter(e=>e&&ID_RE.test(e.race_id)&&KINDS.has(e.kind)&&safeDate(e.starts_on)&&(e.ends_on==null||safeDate(e.ends_on)));
+  return {checked:safeDate((meta.find(m=>m&&m.key==="checked_on")||{}).value),
+    races:races.filter(r=>r&&ID_RE.test(r.id)&&safeDate(r.race_date)).sort((a,b)=>(+a.sort||0)-(+b.sort||0)).map(r=>({
+      id:r.id, code:CODE_RE.test(r.code)?r.code:r.id.toUpperCase(), name:txt(r.name,40), full:txt(r.full_name,80), city:txt(r.city,80),
+      race:r.race_date, raceEnd:safeDate(r.race_end), raceEst:r.race_tbc===true,
+      fee:txt(r.fee,80), entry:txt(r.entry_routes,120), url:safeUrl(r.official_url), note:txt(r.note,400), badge:safeUrl(r.badge_url),
+      events:evs.filter(e=>e.race_id===r.id).sort((a,b)=>a.starts_on<b.starts_on?-1:1)
+        .map(e=>({t:e.kind,k:txt(e.label,60),s:e.starts_on,e:safeDate(e.ends_on),est:e.estimated===true}))}))};
 }
 async function load(){
   const h={apikey:SB_KEY,Authorization:"Bearer "+SB_KEY};
