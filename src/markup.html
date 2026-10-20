@@ -1,0 +1,63 @@
+<div class="mm" data-majors>
+<div class="mm-wrap">
+  <div class="mm-head">
+    <div>
+      <h1>The Marathon Majors</h1>
+      <p class="mm-lede">When to apply for each World Marathon Major. Ballots, qualifier windows and results days, plus expected dates for the next cycle.</p>
+    </div>
+    <div class="mm-head-side">
+      <button class="mm-sub-btn" id="mm-sub-btn" aria-expanded="false" aria-controls="mm-sub">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><rect x="2.5" y="4" width="15" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 8h15M6.5 2.5v3M13.5 2.5v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M10 10.5v4M8 12.5h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        Subscribe to calendar
+      </button>
+      <div class="mm-stamp" id="mm-stamp">Loading dates…</div>
+    </div>
+  </div>
+  <section class="mm-sub" id="mm-sub" hidden aria-label="Subscribe to calendar">
+    <div class="mm-sub-top">
+      <div>
+        <p class="mm-sub-title">Add these dates to your calendar</p>
+        <p class="mm-note">Your calendar keeps itself up to date. When a race announces or changes a date, it appears in your calendar within a day.</p>
+      </div>
+      <button class="mm-x" id="mm-sub-close" aria-label="Close">×</button>
+    </div>
+    <div class="mm-frow" id="mm-scope-row">
+      <span class="lbl">Include</span>
+      <div class="mm-chips">
+        <button class="mm-chip plain" data-scope="all" aria-pressed="true">All races</button>
+        <button class="mm-chip plain" data-scope="sel" aria-pressed="false" id="mm-scope-sel">Races I've selected</button>
+      </div>
+    </div>
+    <div class="mm-sub-links" id="mm-sub-links"></div>
+    <div class="mm-copy">
+      <label for="mm-feed-url" class="lbl">Calendar link</label>
+      <div class="mm-copy-row">
+        <input id="mm-feed-url" type="text" readonly>
+        <button class="mm-chip plain" id="mm-copy">Copy</button>
+      </div>
+      <p class="mm-note">For other apps, use "Add calendar from URL" or "Subscribe" and paste this link.</p>
+    </div>
+  </section>
+  <section>
+    <p class="mm-eyebrow">Next up</p>
+    <div class="mm-cards" id="mm-cards"></div>
+  </section>
+  <section class="mm-filters" aria-label="Filters">
+    <div class="mm-chips" id="mm-race-chips"></div>
+    <div class="mm-frow"><span class="lbl">Show</span><div class="mm-chips" id="mm-status-chips"></div></div>
+  </section>
+  <section>
+    <div class="mm-shell">
+      <div class="mm-scroll" id="mm-scroll"><div class="mm-tl" id="mm-tl"></div></div>
+      <div class="mm-legend">
+        <span><i class="b"></i>Application window</span>
+        <span><i class="e"></i>Expected (not announced)</span>
+        <span><i class="r"></i>Results</span>
+        <span><i class="p"></i>Payment deadline</span>
+        <span><svg width="12" height="12" viewBox="0 0 18 18" style="vertical-align:-1px;margin-right:6px"><path d="M4 2v15" stroke="currentColor" stroke-width="2"/><path d="M5 2h10l-3 4 3 4H5z" fill="currentColor"/></svg>Race day</span>
+      </div>
+    </div>
+  </section>
+  <section class="mm-detail" id="mm-detail" aria-live="polite"></section>
+</div>
+</div>

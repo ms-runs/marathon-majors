@@ -1,0 +1,12 @@
+import { readFileSync } from "node:fs";
+import { buildIcs } from "../supabase/functions/majors-calendar/ics.js";
+const snap = JSON.parse(readFileSync(new URL("../src/snapshot.json", import.meta.url)));
+const events = snap.events.map((e, i) => ({ id: i + 1, ...e, updated_at: "2026-10-11T11:00:00Z" }));
+const all = buildIcs(snap.races, events, { pageUrl: "https://www.migsousa.com" });
+const one = buildIcs(snap.races, events, { races: ["ber"] });
+const lines = all.split("\r\n");
+const long = lines.filter(l => new TextEncoder().encode(l).length > 75);
+const count = (s, t) => s.split(t).length - 1;
+console.log("all events:", count(all, "BEGIN:VEVENT"), "| berlin only:", count(one, "BEGIN:VEVENT"), "| over-75-octet lines:", long.length);
+console.log("begin/end balanced:", count(all, "BEGIN:VEVENT") === count(all, "END:VEVENT"), count(all, "BEGIN:VALARM") === count(all, "END:VALARM"));
+console.log(one.split("\r\n").filter(l => l.startsWith("SUMMARY") || l.startsWith("DTSTART") || l.startsWith("X-WR-CALNAME")).join("\n"));
