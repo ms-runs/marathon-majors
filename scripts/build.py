@@ -14,7 +14,12 @@ SRC, OUT = ROOT / "src", ROOT / "docs"
 OUT.mkdir(exist_ok=True)
 
 css = (SRC / "app.css").read_text()
-app = (SRC / "app.js").read_text().replace("/*SNAPSHOT*/null", (SRC / "snapshot.json").read_text().strip())
+PAGES_URL = "https://ms-runs.github.io/marathon-majors"
+badge_files = sorted((SRC / "badges").glob("*.svg")) if (SRC / "badges").is_dir() else []
+badges = {p.stem: f"{PAGES_URL}/badges/{p.name}" for p in badge_files}
+app = ((SRC / "app.js").read_text()
+       .replace("/*SNAPSHOT*/null", (SRC / "snapshot.json").read_text().strip())
+       .replace("/*BADGES*/{}", json.dumps(badges)))
 markup = (SRC / "markup.html").read_text()
 FONTS_URL = "https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
 FONTS = f'<link rel="stylesheet" href="{FONTS_URL}">'
@@ -72,6 +77,11 @@ if(document.readyState==="loading") document.addEventListener("DOMContentLoaded"
 (OUT / "squarespace-code-block.html").write_text(
     f"<!-- Marathon Majors timeline (full version): paste into a Squarespace Code block only if the short snippet can't be used -->\n"
     f"{FONTS}\n<style>\n{embed_css}\n</style>\n{markup}\n<script>\n{app}\n</script>\n")
+
+# 4. Badges: copied as-is so the widget can load them from GitHub Pages
+(OUT / "badges").mkdir(exist_ok=True)
+for p in badge_files:
+    (OUT / "badges" / p.name).write_text(p.read_text())
 
 (OUT / ".nojekyll").write_text("")
 print("built:", ", ".join(f"{p.name} ({p.stat().st_size:,} B)" for p in sorted(OUT.iterdir()) if p.name != ".nojekyll"))

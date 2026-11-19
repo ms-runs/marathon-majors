@@ -237,6 +237,8 @@ const safeUrl=u=>{ if(typeof u!=="string"||/[\s"'<>`\\]/.test(u)) return null;
   try{ const x=new URL(u); return x.protocol==="https:"&&x.hostname ? x.href : null; }catch(e){ return null; } };
 const safeDate=d=>typeof d==="string"&&DATE_RE.test(d)&&!isNaN(D(d)) ? d : null;
 const txt=(s,max)=>s==null?"":String(s).slice(0,max);
+// Finished badges shipped with the widget (src/badges/<id>.svg); a badge_url set in the database takes priority.
+const BADGES={"chi": "https://ms-runs.github.io/marathon-majors/badges/chi.svg"};
 const badge=(r,size=44)=>r.badge?`<span class="mm-badge img" style="--s:${size}px"><img src="${esc(r.badge)}" alt=""></span>`
   :`<span class="mm-badge" style="--c:var(--mm-${r.id});--s:${size}px" aria-hidden="true"><span>${esc(r.code)}</span></span>`;
 
@@ -247,7 +249,7 @@ function shape(races,events,meta){
     races:races.filter(r=>r&&ID_RE.test(r.id)&&safeDate(r.race_date)).sort((a,b)=>(+a.sort||0)-(+b.sort||0)).map(r=>({
       id:r.id, code:CODE_RE.test(r.code)?r.code:r.id.toUpperCase(), name:txt(r.name,40), full:txt(r.full_name,80), city:txt(r.city,80),
       race:r.race_date, raceEnd:safeDate(r.race_end), raceEst:r.race_tbc===true,
-      fee:txt(r.fee,80), entry:txt(r.entry_routes,120), url:safeUrl(r.official_url), note:txt(r.note,400), badge:safeUrl(r.badge_url),
+      fee:txt(r.fee,80), entry:txt(r.entry_routes,120), url:safeUrl(r.official_url), note:txt(r.note,400), badge:safeUrl(r.badge_url)||BADGES[r.id]||null,
       events:evs.filter(e=>e.race_id===r.id).sort((a,b)=>a.starts_on<b.starts_on?-1:1)
         .map(e=>({t:e.kind,k:txt(e.label,60),s:e.starts_on,e:safeDate(e.ends_on),est:e.estimated===true}))}))};
 }

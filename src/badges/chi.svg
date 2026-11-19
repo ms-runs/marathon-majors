@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="20 20 480 480" width="480" height="480"><style>
+.k1{stop-color:#0E2257}.k2{stop-color:#1B3F8F}.k3{stop-color:#2F6DBF}.k4{stop-color:#6FA8DC}.k5{stop-color:#C4E0F5}
+.bgT{fill:url(#gT)}.bgB{fill:url(#gB)}
+.smear{filter:url(#smear)}.smear2{filter:url(#smear2)}.tooth{filter:url(#tooth);opacity:.3}
+.clip{clip-path:url(#disc)}
+.ln{fill:none;stroke:#FFFFFF;stroke-width:14;stroke-linecap:round;stroke-linejoin:round}
+.miter{stroke-linejoin:miter;stroke-width:10;stroke-linecap:butt}
+.heavy{stroke-width:24}
+.ring{fill:none;stroke:#E1251B;stroke-width:12}
+.fillRed{fill:#E1251B}
+.pale{fill:#BFDDF3}
+.paleLn{fill:none;stroke:#BFDDF3;stroke-width:5;stroke-linecap:round}
+.stripe{fill:#B3DDF2;opacity:.85}
+</style>
+<defs>
+<linearGradient id="gT" x1="0" y1="0" x2="0.18" y2="1"><stop offset="0" class="k1"></stop><stop offset="0.3" class="k2"></stop><stop offset="0.56" class="k3"></stop><stop offset="0.8" class="k4"></stop><stop offset="1" class="k5"></stop></linearGradient>
+<linearGradient id="gB" x1="0" y1="1" x2="0.18" y2="0"><stop offset="0" class="k1"></stop><stop offset="0.3" class="k2"></stop><stop offset="0.56" class="k3"></stop><stop offset="0.8" class="k4"></stop><stop offset="1" class="k5"></stop></linearGradient>
+<filter id="smear" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.006 0.09" numOctaves="3" seed="7" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="52" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="smear2" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.01 0.14" numOctaves="2" seed="12" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="80" xChannelSelector="G" yChannelSelector="R"></feDisplacementMap></filter>
+<filter id="tooth" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.22 0.95" numOctaves="2" seed="16" result="t"></feTurbulence><feColorMatrix in="t" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  3.4 0 0 0 -1.95"></feColorMatrix></filter>
+<clipPath id="disc"><circle cx="260" cy="260" r="240"></circle></clipPath>
+</defs>
+<g class="clip">
+<rect class="bgT smear" x="-40" y="-40" width="600" height="600"></rect>
+<rect class="bgT smear2" x="-40" y="-40" width="600" height="600" opacity="0.55"></rect>
+<rect class="tooth" x="0" y="0" width="520" height="520"></rect>
+</g>
+<g class="clip">
+<g class="ln"><path d="M186 118 L104 443"></path><path d="M194 100 L258 100 L270.5 350"></path><path d="M223 100 L223 18"></path>
+<g transform="translate(-300 -296) scale(1.9)"><path style="stroke-width:7.4" d="M300 340 C340 318 410 322 432 358 C448 386 446 424 424 432 C410 437 398 430 390 420 C372 398 330 396 312 414 C302 424 292 434 280 430 C262 424 258 396 268 372 C276 356 288 346 300 340 Z"></path></g></g>
+</g>
+<path class="fillRed" d="M114.0 236.0 L119.5 250.5 L134.8 248.0 L125.0 260.0 L134.8 272.0 L119.5 269.5 L114.0 284.0 L108.5 269.5 L93.2 272.0 L103.0 260.0 L93.2 248.0 L108.5 250.5 Z"></path><path class="fillRed" d="M210.0 236.0 L215.5 250.5 L230.8 248.0 L221.0 260.0 L230.8 272.0 L215.5 269.5 L210.0 284.0 L204.5 269.5 L189.2 272.0 L199.0 260.0 L189.2 248.0 L204.5 250.5 Z"></path><path class="fillRed" d="M306.0 236.0 L311.5 250.5 L326.8 248.0 L317.0 260.0 L326.8 272.0 L311.5 269.5 L306.0 284.0 L300.5 269.5 L285.2 272.0 L295.0 260.0 L285.2 248.0 L300.5 250.5 Z"></path><path class="fillRed" d="M402.0 236.0 L407.5 250.5 L422.8 248.0 L413.0 260.0 L422.8 272.0 L407.5 269.5 L402.0 284.0 L396.5 269.5 L381.2 272.0 L391.0 260.0 L381.2 248.0 L396.5 250.5 Z"></path>
+</svg>
